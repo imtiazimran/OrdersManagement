@@ -1,4 +1,4 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Modal,
   ModalOverlay,
@@ -11,65 +11,60 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
-  Box,
 } from "@chakra-ui/react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { useCreateSKU } from "../hooks/saleOrdersHooks";
+import { MultiSelect } from "chakra-multiselect";
+import { useForm, Controller } from "react-hook-form";
 
-type SaleOrderFormModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-type Item = {
-  sku_id: number;
-  price: number;
-  quantity: number;
-};
-
-type SaleOrderFormData = {
-  customer_id: number;
-  items: Item[];
-  paid: boolean;
-  invoice_no: string;
-  invoice_date: Date;
-};
-
-const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
+const SaleOrderFormModal = ({
   isOpen,
   onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
 }) => {
   const {
-    register,
+    control,
     handleSubmit,
-    control,
-    reset,
     formState: { errors },
-  } = useForm<SaleOrderFormData>({
-    defaultValues: {
-      customer_id: 0,
-      items: [{ sku_id: 0, price: 0, quantity: 0 }],
-      paid: false,
-      invoice_no: "",
-      invoice_date: new Date(),
-    },
-  });
+  } = useForm();
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "items",
-  });
+  const items = [
+    "Neptunium",
+    "Plutonium",
+    "Americium",
+    "Curium",
+    "Berkelium",
+    "Californium",
+    "Einsteinium",
+    "Fermium",
+    "Mendelevium",
+    "Nobelium",
+    "Lawrencium",
+    "Rutherfordium",
+    "Dubnium",
+    "Seaborgium",
+    "Bohrium",
+    "Hassium",
+    "Meitnerium",
+    "Darmstadtium",
+    "Roentgenium",
+    "Copernicium",
+    "Nihonium",
+    "Flerovium",
+    "Moscovium",
+    "Livermorium",
+    "Tennessine",
+    "Oganesson",
+  ];
 
-  const createSKU = useCreateSKU();
+  const _options = items.map((label) => ({
+    label,
+    value: label.toLowerCase(),
+  }));
 
-  const onSubmit = async (data: SaleOrderFormData) => {
-    const res = await createSKU.mutate(data);
-    console.log(res, data);
+  const onSubmit = (data: any) => {
+    console.log(data);
     onClose();
-    reset();
   };
 
   return (
@@ -82,125 +77,62 @@ const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.customer_id}>
               <FormLabel>Customer ID</FormLabel>
-              <Input
-                type="number"
-                {...register("customer_id", {
-                  required: "Customer ID is required",
-                })}
-                placeholder="Enter Customer ID"
-              />
-              {errors.customer_id && (
-                <Box color="red.500">{errors.customer_id.message}</Box>
-              )}
-            </FormControl>
-
-            {fields.map((item, index) => (
-              <Box key={item.id} mt="4">
-                <FormControl isInvalid={!!errors.items?.[index]?.sku_id}>
-                  <FormLabel>SKU ID</FormLabel>
-                  <Input
-                    type="number"
-                    {...register(`items.${index}.sku_id` as const, {
-                      required: "SKU ID is required",
-                    })}
-                    placeholder="Enter SKU ID"
-                  />
-                  {errors.items?.[index]?.sku_id && (
-                    <Box color="red.500">
-                      {errors.items?.[index]?.sku_id?.message}
-                    </Box>
-                  )}
-                </FormControl>
-                <FormControl isInvalid={!!errors.items?.[index]?.price} mt="2">
-                  <FormLabel>Price</FormLabel>
-                  <Input
-                    type="number"
-                    {...register(`items.${index}.price` as const, {
-                      required: "Price is required",
-                    })}
-                    placeholder="Enter Price"
-                  />
-                  {errors.items?.[index]?.price && (
-                    <Box color="red.500">
-                      {errors.items?.[index]?.price?.message}
-                    </Box>
-                  )}
-                </FormControl>
-                <FormControl
-                  isInvalid={!!errors.items?.[index]?.quantity}
-                  mt="2"
-                >
-                  <FormLabel>Quantity</FormLabel>
-                  <Input
-                    type="number"
-                    {...register(`items.${index}.quantity` as const, {
-                      required: "Quantity is required",
-                    })}
-                    placeholder="Enter Quantity"
-                  />
-                  {errors.items?.[index]?.quantity && (
-                    <Box color="red.500">
-                      {errors.items?.[index]?.quantity?.message}
-                    </Box>
-                  )}
-                </FormControl>
-                <Button mt="2" colorScheme="red" onClick={() => remove(index)}>
-                  Remove Item
-                </Button>
-              </Box>
-            ))}
-            <Button
-              mt="4"
-              onClick={() => append({ sku_id: 0, price: 0, quantity: 0 })}
-            >
-              Add Item
-            </Button>
-
-            <FormControl mt="4">
-              <FormLabel>Paid</FormLabel>
-              <Checkbox {...register("paid")}>Paid</Checkbox>
-            </FormControl>
-
-            <FormControl isInvalid={!!errors.invoice_no} mt="4">
-              <FormLabel>Invoice Number</FormLabel>
-              <Input
-                type="text"
-                {...register("invoice_no", {
-                  required: "Invoice number is required",
-                })}
-                placeholder="Enter Invoice Number"
-              />
-              {errors.invoice_no && (
-                <Box color="red.500">{errors.invoice_no.message}</Box>
-              )}
-            </FormControl>
-
-            <FormControl isInvalid={!!errors.invoice_date} mt="4">
-              <FormLabel>Invoice Date</FormLabel>
               <Controller
+                name="customer_id"
                 control={control}
-                name="invoice_date"
+                defaultValue=""
+                rules={{ required: "Customer ID is required" }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </FormControl>
+            <FormControl mt={4} isInvalid={!!errors.items}>
+              <FormLabel>Products</FormLabel>
+              <Controller
+                name="items"
+                control={control}
+                defaultValue={[]}
+                rules={{ required: "At least one product is required" }}
                 render={({ field }) => (
-                  <DatePicker
-                    selected={field.value}
+                  <MultiSelect
+                    {...field}
+                    options={_options}
+                    value={field.value || []}
                     onChange={field.onChange}
-                    dateFormat="MM/dd/yyyy"
+                    placeholder="Select products"
                   />
                 )}
               />
-              {errors.invoice_date && (
-                <Box color="red.500">{errors.invoice_date.message}</Box>
-              )}
             </FormControl>
-
-            <Button type="submit" colorScheme="blue" mt="4">
-              Create
-            </Button>
+            <FormControl mt={4} isInvalid={!!errors.invoice_no}>
+              <FormLabel>Invoice Number</FormLabel>
+              <Controller
+                name="invoice_no"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Invoice Number is required" }}
+                render={({ field }) => <Input {...field} />}
+              />
+            </FormControl>
+            <FormControl mt={4} isInvalid={!!errors.invoice_date}>
+              <FormLabel>Invoice Date</FormLabel>
+              <Controller
+                name="invoice_date"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Invoice Date is required" }}
+                render={({ field }) => <Input type="date" {...field} />}
+              />
+            </FormControl>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} type="submit">
+                Save
+              </Button>
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
           </form>
         </ModalBody>
-        <ModalFooter>
-          <Button onClick={onClose}>Cancel</Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

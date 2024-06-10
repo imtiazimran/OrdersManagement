@@ -33,6 +33,8 @@ const CompletedSaleOrders: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedSKU, setSelectedSKU] = useState<any>(null);
 
+  console.log(skus);
+
   const {
     register,
     reset,
