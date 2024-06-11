@@ -10,27 +10,25 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import SaleOrderFormModal from "../Components/SaleOrderFormModal";
 import ActiveSaleOrders from "../Components/ActiveSaleOders";
 import CompletedSaleOrders from "../Components/CompleteSaleOrders";
+import SaleOrderFormModal from "../Components/SaleOrderFormModal";
 
 const SaleOrdersPage: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box p="4">
-      <Flex justify="space-between" align="center" mb="4">
-        <Tabs variant="enclosed">
+      <Tabs variant="enclosed">
+        <Flex justify="space-between" align="center" mb="4">
           <TabList>
             <Tab>Active Sale Orders</Tab>
             <Tab>Completed Sale Orders</Tab>
           </TabList>
-        </Tabs>
-        <Button onClick={onOpen} colorScheme="blue">
-          + Sale Order
-        </Button>
-      </Flex>
-      <Tabs variant="enclosed">
+          <Button onClick={onOpen} colorScheme="blue">
+            + Sale Order
+          </Button>
+        </Flex>
         <TabPanels>
           <TabPanel>
             <ActiveSaleOrders />

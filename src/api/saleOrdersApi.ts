@@ -2,20 +2,60 @@
 // saleOrdersApi.ts
 // eslint-disable-next-line prefer-const
 let skus = [
+    // {
+    //     id: 1,
+    //     name: 'Product 1',
+    //     customer: {
+    //         id: 1,
+    //         name: 'Ram',
+    //         email: 'ram@example.com',
+    //         pincode: 'Mumbai',
+    //         location_name: 'Mumbai, Maharashtra, India',
+    //         type: 'C',
+    //         profile_pic: null,
+    //         gst: '',
+    //     },
+    // },
     {
-        id: 1,
-        name: 'Product 1',
-        customer: {
-            id: 1,
-            name: 'Ram',
-            email: 'ram@example.com',
-            pincode: 'Mumbai',
-            location_name: 'Mumbai, Maharashtra, India',
-            type: 'C',
-            profile_pic: null,
-            gst: '',
-        },
+        "customer_id": 11908,
+        "items": [
+            {
+                "sku_id": 220,
+                "price": 12,
+                "quantity": 12
+            }
+        ],
+        "paid": false,
+        "invoice_no": "Invoice - 1212121",
+        "invoice_date": "7/5/2024"
     },
+    {
+        "customer_id": 11908,
+        "items": [
+            {
+                "sku_id": 220,
+                "price": 12,
+                "quantity": 12
+            }
+        ],
+        "paid": false,
+        "invoice_no": "Invoice - 1212121",
+        "invoice_date": "7/5/2024"
+    },
+    {
+        "customer_id": 11908,
+        "items": [
+            {
+                "sku_id": 220,
+                "price": 12,
+                "quantity": 12
+            }
+        ],
+        "paid": false,
+        "invoice_no": "Invoice - 1212121",
+        "invoice_date": "7/5/2024"
+    }
+
     // Add more SKUs as needed
 ];
 

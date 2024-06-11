@@ -20,6 +20,15 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  TableContainer,
+  Table,
+  TableCaption,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Tfoot,
+  Td,
 } from "@chakra-ui/react";
 
 type SKUFormData = {
@@ -70,33 +79,31 @@ const CompletedSaleOrders: React.FC = () => {
   return (
     <Box p="4">
       <List spacing="3">
-        {skus?.map((sku: any) => (
-          <ListItem
-            key={sku.id}
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            {sku.name}
-            <Box>
-              <Button
-                size="sm"
-                mr="2"
-                onClick={() => handleViewSKU(sku)}
-                colorScheme="yellow"
-              >
-                View
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => handleDeleteSKU(sku.id)}
-                colorScheme="red"
-              >
-                Delete
-              </Button>
-            </Box>
-          </ListItem>
-        ))}
+        <TableContainer>
+          <Table variant="striped" colorScheme="teal">
+            <TableCaption>SKU List</TableCaption>
+            <Thead>
+              <Tr>
+                <Th>ID</Th>
+                <Th>Customer Name</Th>
+                <Th>Price</Th>
+                <Th>Last Modify</Th>
+                {/* <Th>Edit/View</Th> */}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {skus?.map((sku: any) => (
+                <Tr key={sku.id}>
+                  <Td>{sku.id}</Td>
+                  <Td>{sku.customer.name}</Td>
+                  <Td>{sku.price}</Td>
+                  <Td>12/10/2024</Td>
+                </Tr>
+              ))}
+            </Tbody>
+            <Tfoot />
+          </Table>
+        </TableContainer>
       </List>
 
       <Modal isOpen={isOpen} onClose={onClose}>

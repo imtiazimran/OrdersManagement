@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { MultiSelect } from "chakra-multiselect";
 import { useForm, Controller } from "react-hook-form";
+import "..//index.css";
 
 const SaleOrderFormModal = ({
   isOpen,
@@ -85,7 +86,11 @@ const SaleOrderFormModal = ({
                 render={({ field }) => <Input {...field} />}
               />
             </FormControl>
-            <FormControl mt={4} isInvalid={!!errors.items}>
+            <FormControl
+              className="chakra-multiselect bg-transparent"
+              mt={4}
+              isInvalid={!!errors.items}
+            >
               <FormLabel>Products</FormLabel>
               <Controller
                 name="items"
@@ -99,6 +104,7 @@ const SaleOrderFormModal = ({
                     value={field.value || []}
                     onChange={field.onChange}
                     placeholder="Select products"
+                    style={{ backgroundColor: "white" }}
                   />
                 )}
               />
