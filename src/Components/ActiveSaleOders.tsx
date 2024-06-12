@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  useFetchSKUs,
-  useCreateSKU,
-  useUpdateSKU,
-  useDeleteSKU,
+  useFetchOrders,
+  useCreateOrder,
+  useUpdateOrder,
+  useDeleteOrder,
 } from "../hooks/saleOrdersHooks";
 import {
   Box,
@@ -33,6 +33,7 @@ import {
   Tfoot,
   Td,
 } from "@chakra-ui/react";
+import { useFetchCustomers } from "../hooks/useCustomerHooks";
 
 type SKUFormData = {
   name: string;
@@ -40,20 +41,44 @@ type SKUFormData = {
 };
 
 const ActiveSaleOrders: React.FC = () => {
-  const { data: skus, isLoading, isError, error } = useFetchSKUs();
-  const createSKU = useCreateSKU();
-  const updateSKU = useUpdateSKU();
-  const deleteSKU = useDeleteSKU();
+  const { data: orders, isLoading, isError, error } = useFetchOrders();
+  const { data: customers, isLoading: customersLoading } = useFetchCustomers();
+
+  const createOrder = useCreateOrder();
+  const updateOrder = useUpdateOrder();
+  const deleteOrder = useDeleteOrder();
+
+  const customerMap = customers?.reduce(
+    (
+      acc: { [x: string]: any },
+      customer: { id: string | number; name: any }
+    ) => {
+      acc[customer.id] = customer.name;
+      return acc;
+    },
+    {}
+  );
+
+  const saleOrdersWithCustomerNames = orders?.map((order) => ({
+    ...order,
+    customerName: order.customer_id ? customerMap[order.customer_id] : null,
+    price: order.items.reduce((total, item) => total + item.price, 0),
+  }));
+
+  console.log(saleOrdersWithCustomerNames);
+
   const {
     isOpen: isEditOpen,
     onOpen: onEditOpen,
     onClose: onEditClose,
   } = useDisclosure();
+
   const {
     isOpen: isActionOpen,
     onOpen: onActionOpen,
     onClose: onActionClose,
   } = useDisclosure();
+
   const {
     isOpen: isDeleteConfirmOpen,
     onOpen: onDeleteConfirmOpen,
@@ -68,8 +93,8 @@ const ActiveSaleOrders: React.FC = () => {
     formState: { errors },
   } = useForm<SKUFormData>();
 
-  const handleCreateSKU = (data: SKUFormData) => {
-    createSKU.mutate(data, {
+  const handleCreateOrder = (data: SKUFormData) => {
+    createOrder.mutate(data, {
       onSuccess: () => {
         reset();
       },
@@ -82,8 +107,8 @@ const ActiveSaleOrders: React.FC = () => {
     onEditOpen();
   };
 
-  const handleUpdateSKU = (data: SKUFormData) => {
-    updateSKU.mutate(
+  const handleUpdateOrder = (data: SKUFormData) => {
+    updateOrder.mutate(
       { id: selectedSKU.id, updatedSKU: data },
       {
         onSuccess: () => {
@@ -94,7 +119,7 @@ const ActiveSaleOrders: React.FC = () => {
   };
   console.log(selectedSKU?.name);
   const handleDeleteSKU = (id: number) => {
-    deleteSKU.mutate(id, {
+    deleteOrder.mutate(id, {
       onSuccess: () => {
         onDeleteConfirmClose();
         onActionClose();
@@ -121,7 +146,7 @@ const ActiveSaleOrders: React.FC = () => {
   return (
     <Box p="4">
       <Box mb="4">
-        <form onSubmit={handleSubmit(handleCreateSKU)}>
+        <form onSubmit={handleSubmit(handleCreateOrder)}>
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>SKU Name</FormLabel>
             <Input
@@ -150,15 +175,15 @@ const ActiveSaleOrders: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {skus?.map((sku: any) => (
-                <Tr key={sku.id}>
-                  <Td>{sku.id}</Td>
-                  <Td>{sku.customer.name}</Td>
-                  <Td>{sku.price}</Td>
+              {saleOrdersWithCustomerNames?.map((order: any, i: number) => (
+                <Tr key={i}>
+                  <Td>{order?.customer_id}</Td>
+                  <Td>{order?.customerName}</Td>
+                  <Td>{order?.price}</Td>
                   <Td>12/10/2024</Td>
                   <Td
                     onClick={() => {
-                      setSelectedSKU(sku);
+                      setSelectedSKU(order);
                       onActionOpen();
                     }}
                     style={{ cursor: "pointer", width: "10px" }}
@@ -217,7 +242,7 @@ const ActiveSaleOrders: React.FC = () => {
           <ModalHeader>Edit SKU</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form onSubmit={handleSubmit(handleUpdateSKU)}>
+            <form onSubmit={handleSubmit(handleUpdateOrder)}>
               <FormControl isInvalid={!!errors.name}>
                 <FormLabel>SKU Name</FormLabel>
                 <Input

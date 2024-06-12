@@ -11,23 +11,29 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Checkbox,
 } from "@chakra-ui/react";
 import { MultiSelect } from "chakra-multiselect";
 import { useForm, Controller } from "react-hook-form";
-import "..//index.css";
+import "../index.css";
+import { useCreateSKU } from "../hooks/saleOrdersHooks";
 
-const SaleOrderFormModal = ({
-  isOpen,
-  onClose,
-}: {
+type SaleOrderFormModalProps = {
   isOpen: boolean;
   onClose: () => void;
+};
+
+const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
+  isOpen,
+  onClose,
 }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const mutation = useCreateSKU();
 
   const items = [
     "Neptunium",
@@ -40,22 +46,6 @@ const SaleOrderFormModal = ({
     "Fermium",
     "Mendelevium",
     "Nobelium",
-    "Lawrencium",
-    "Rutherfordium",
-    "Dubnium",
-    "Seaborgium",
-    "Bohrium",
-    "Hassium",
-    "Meitnerium",
-    "Darmstadtium",
-    "Roentgenium",
-    "Copernicium",
-    "Nihonium",
-    "Flerovium",
-    "Moscovium",
-    "Livermorium",
-    "Tennessine",
-    "Oganesson",
   ];
 
   const _options = items.map((label) => ({
@@ -64,7 +54,7 @@ const SaleOrderFormModal = ({
   }));
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    mutation.mutate(data);
     onClose();
   };
 
@@ -129,8 +119,22 @@ const SaleOrderFormModal = ({
                 render={({ field }) => <Input type="date" {...field} />}
               />
             </FormControl>
+            <FormControl mt={4} isInvalid={!!errors.paid}>
+              <FormLabel>Paid</FormLabel>
+              <Controller
+                name="paid"
+                control={control}
+                defaultValue={false}
+                render={({ field }) => <Checkbox {...field} />}
+              />
+            </FormControl>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} type="submit">
+              <Button
+                colorScheme="blue"
+                mr={3}
+                type="submit"
+                isLoading={mutation?.isLoading}
+              >
                 Save
               </Button>
               <Button variant="ghost" onClick={onClose}>

@@ -1,40 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchSKUs, createSKU, updateSKU, deleteSKU } from '../api/saleOrdersApi';
+import { createOrder, deleteOrder, fetchSaleOrders, updateOrder } from '../api/saleOrdersApi';
 
 // React Query hooks for managing SKUs
 
-export const useFetchSKUs = () => {
+export const useFetchOrders = () => {
     return useQuery({
         queryKey: ['skus'],
-        queryFn: fetchSKUs,
+        queryFn: fetchSaleOrders,
     });
 };
 
-export const useCreateSKU = () => {
+export const useCreateOrder = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: createSKU,
+        mutationFn: createOrder,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['skus'] });
         },
     });
 };
 
-export const useUpdateSKU = () => {
+export const useUpdateOrder = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, updatedSKU }: { id: number; updatedSKU: any }) => updateSKU(id, updatedSKU),
+        mutationFn: ({ id, updatedSKU }: { id: number; updatedSKU: any }) => updateOrder(id, updatedSKU),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['skus'] });
         },
     });
 };
 
-export const useDeleteSKU = () => {
+export const useDeleteOrder = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: number) => deleteSKU(id),
+        mutationFn: (id: number) => deleteOrder(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['skus'] });
         },

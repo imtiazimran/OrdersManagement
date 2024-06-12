@@ -1,21 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // saleOrdersApi.ts
 // eslint-disable-next-line prefer-const
-let skus = [
-    // {
-    //     id: 1,
-    //     name: 'Product 1',
-    //     customer: {
-    //         id: 1,
-    //         name: 'Ram',
-    //         email: 'ram@example.com',
-    //         pincode: 'Mumbai',
-    //         location_name: 'Mumbai, Maharashtra, India',
-    //         type: 'C',
-    //         profile_pic: null,
-    //         gst: '',
-    //     },
-    // },
+let saleOrders = [
     {
         "customer_id": 11908,
         "items": [
@@ -44,6 +30,19 @@ let skus = [
     },
     {
         "customer_id": 11908,
+        "items": [
+            {
+                "sku_id": 220,
+                "price": 12,
+                "quantity": 12
+            }
+        ],
+        "paid": false,
+        "invoice_no": "Invoice - 1212121",
+        "invoice_date": "7/5/2024"
+    },
+    {
+        "customer_id": 11909,
         "items": [
             {
                 "sku_id": 220,
@@ -56,42 +55,42 @@ let skus = [
         "invoice_date": "7/5/2024"
     }
 
-    // Add more SKUs as needed
+    // Add more saleOrders as needed
 ];
 
-// Function to fetch all SKUs
-export const fetchSKUs = async () => {
+// Function to fetch all saleOrders
+export const fetchSaleOrders = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    return skus;
+    return saleOrders;
 };
 
 // Function to create a new SKU
-export const createSKU = async (newSKU: any) => {
+export const createOrder = async (newSKU: any) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const id = skus.length + 1;
+    const id = saleOrders.length + 1;
     const newSku = { ...newSKU, id };
-    skus.push(newSku);
+    saleOrders.push(newSku);
     return newSku;
 };
 
 // Function to update an existing SKU
-export const updateSKU = async (id: number, updatedSKU: any) => {
+export const updateOrder = async (id: number, updatedOrder: any) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const index = skus.findIndex((sku) => sku.id === id);
+    const index = saleOrders.findIndex((order) => order.customer_id === id);
     if (index !== -1) {
-        skus[index] = { ...skus[index], ...updatedSKU };
-        return skus[index];
+        saleOrders[index] = { ...saleOrders[index], ...updatedOrder };
+        return saleOrders[index];
     } else {
         throw new Error('SKU not found');
     }
 };
 
 // Function to delete a SKU
-export const deleteSKU = async (id: number) => {
+export const deleteOrder = async (id: number) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const index = skus.findIndex((sku) => sku.id === id);
+    const index = saleOrders.findIndex((order) => order.customer_id === id);
     if (index !== -1) {
-        skus.splice(index, 1);
+        saleOrders.splice(index, 1);
         return true;
     } else {
         throw new Error('SKU not found');

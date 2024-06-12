@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDeleteSKU, useFetchSKUs } from "../hooks/saleOrdersHooks";
 import {
   Box,
   Button,
@@ -30,6 +29,7 @@ import {
   Tfoot,
   Td,
 } from "@chakra-ui/react";
+import { useDeleteOrder, useFetchOrders } from "../hooks/saleOrdersHooks";
 
 type SKUFormData = {
   name: string;
@@ -37,12 +37,12 @@ type SKUFormData = {
 };
 
 const CompletedSaleOrders: React.FC = () => {
-  const { data: skus, isLoading, isError, error } = useFetchSKUs();
-  const deleteSKU = useDeleteSKU();
+  const { data: orders, isLoading, isError, error } = useFetchOrders();
+  const deleteOrder = useDeleteOrder();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedSKU, setSelectedSKU] = useState<any>(null);
 
-  console.log(skus);
+  console.log(orders);
 
   const {
     register,
@@ -57,7 +57,7 @@ const CompletedSaleOrders: React.FC = () => {
   };
 
   const handleDeleteSKU = (id: number) => {
-    deleteSKU.mutate(id);
+    deleteOrder.mutate(id);
   };
 
   if (isLoading) {
@@ -92,11 +92,11 @@ const CompletedSaleOrders: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {skus?.map((sku: any) => (
-                <Tr key={sku.id}>
-                  <Td>{sku.id}</Td>
-                  <Td>{sku.customer.name}</Td>
-                  <Td>{sku.price}</Td>
+              {orders?.map((sku: any) => (
+                <Tr key={sku?.id}>
+                  <Td>{sku?.id}</Td>
+                  <Td>{sku?.customer?.name}</Td>
+                  <Td>{sku?.price}</Td>
                   <Td>12/10/2024</Td>
                 </Tr>
               ))}
