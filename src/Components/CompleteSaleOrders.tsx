@@ -1,24 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
 import {
   Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
   List,
-  ListItem,
   Spinner,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   TableContainer,
   Table,
   TableCaption,
@@ -29,21 +15,13 @@ import {
   Tfoot,
   Td,
 } from "@chakra-ui/react";
-import { useDeleteOrder, useFetchOrders } from "../hooks/saleOrdersHooks";
+import { useFetchOrders } from "../hooks/saleOrdersHooks";
 import { useFetchCustomers } from "../hooks/useCustomerHooks";
 import { TCustomer } from "../api/customerApi";
-
-type SKUFormData = {
-  name: string;
-  // Add other fields as needed
-};
 
 const CompletedSaleOrders: React.FC = () => {
   const { data: orders, isLoading, isError, error } = useFetchOrders();
   const { data } = useFetchCustomers();
-  const deleteOrder = useDeleteOrder();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedSKU, setSelectedSKU] = useState<any>(null);
 
   const customerMap = data?.reduce((acc: any, customer: TCustomer) => {
     acc[customer.id] = customer.name;
@@ -57,22 +35,6 @@ const CompletedSaleOrders: React.FC = () => {
   }));
 
   console.log(saleOrdersWithCustomerNames);
-
-  const {
-    register,
-    reset,
-    formState: { errors },
-  } = useForm<SKUFormData>();
-
-  const handleViewSKU = (sku: any) => {
-    setSelectedSKU(sku);
-    reset(sku);
-    onOpen();
-  };
-
-  const handleDeleteSKU = (id: number) => {
-    deleteOrder.mutate(id);
-  };
 
   if (isLoading) {
     return (
@@ -119,33 +81,6 @@ const CompletedSaleOrders: React.FC = () => {
           </Table>
         </TableContainer>
       </List>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>View SKU</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <form>
-              <FormControl isInvalid={!!errors.name}>
-                <FormLabel>SKU Name</FormLabel>
-                <Input
-                  type="text"
-                  {...register("name")}
-                  placeholder="Enter SKU name"
-                  isReadOnly
-                />
-                {errors.name && (
-                  <Box color="red.500">{errors.name.message}</Box>
-                )}
-              </FormControl>
-              <ModalFooter>
-                <Button onClick={onClose}>Close</Button>
-              </ModalFooter>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </Box>
   );
 };

@@ -97,11 +97,11 @@ const ActiveSaleOrders: React.FC = () => {
     });
   };
 
-  const handleEditSKU = (sku: any) => {
-    setSelectedSKU(sku);
-    reset(sku);
-    onEditOpen();
-  };
+  // const handleEditSKU = (sku: any) => {
+  //   setSelectedSKU(sku);
+  //   reset(sku);
+  //   onEditOpen();
+  // };
 
   const handleUpdateOrder = (data: SKUFormData) => {
     updateOrder.mutate(
