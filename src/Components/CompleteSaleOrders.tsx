@@ -30,6 +30,8 @@ import {
   Td,
 } from "@chakra-ui/react";
 import { useDeleteOrder, useFetchOrders } from "../hooks/saleOrdersHooks";
+import { useFetchCustomers } from "../hooks/useCustomerHooks";
+import { TCustomer } from "../api/customerApi";
 
 type SKUFormData = {
   name: string;
@@ -38,11 +40,23 @@ type SKUFormData = {
 
 const CompletedSaleOrders: React.FC = () => {
   const { data: orders, isLoading, isError, error } = useFetchOrders();
+  const { data } = useFetchCustomers();
   const deleteOrder = useDeleteOrder();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedSKU, setSelectedSKU] = useState<any>(null);
 
-  console.log(orders);
+  const customerMap = data?.reduce((acc: any, customer: TCustomer) => {
+    acc[customer.id] = customer.name;
+    return acc;
+  }, {});
+
+  const saleOrdersWithCustomerNames = orders?.map((order) => ({
+    ...order,
+    customerName: order.customer_id ? customerMap[order.customer_id] : null,
+    price: order.items.reduce((total, item) => total + item.price, 0),
+  }));
+
+  console.log(saleOrdersWithCustomerNames);
 
   const {
     register,
@@ -92,12 +106,12 @@ const CompletedSaleOrders: React.FC = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {orders?.map((sku: any) => (
-                <Tr key={sku?.id}>
-                  <Td>{sku?.id}</Td>
-                  <Td>{sku?.customer?.name}</Td>
-                  <Td>{sku?.price}</Td>
-                  <Td>12/10/2024</Td>
+              {saleOrdersWithCustomerNames?.map((order: any) => (
+                <Tr key={order?.customer_id}>
+                  <Td>{order?.customer_id}</Td>
+                  <Td>{order?.customerName}</Td>
+                  <Td>{order?.price}</Td>
+                  <Td>{order?.invoice_date}</Td>
                 </Tr>
               ))}
             </Tbody>

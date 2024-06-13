@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchCustomers } from "../api/customerApi";
+import { TCustomer, fetchCustomers } from "../api/customerApi";
+
+
 
 export const useFetchCustomers = () => {
-    return useQuery({
+    return useQuery<TCustomer[]>({
         queryKey: ["customers"],
         queryFn: fetchCustomers,
         staleTime: 5000,

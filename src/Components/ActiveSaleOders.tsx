@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -34,6 +35,7 @@ import {
   Td,
 } from "@chakra-ui/react";
 import { useFetchCustomers } from "../hooks/useCustomerHooks";
+import { TCustomer } from "../api/customerApi";
 
 type SKUFormData = {
   name: string;
@@ -42,22 +44,16 @@ type SKUFormData = {
 
 const ActiveSaleOrders: React.FC = () => {
   const { data: orders, isLoading, isError, error } = useFetchOrders();
-  const { data: customers, isLoading: customersLoading } = useFetchCustomers();
+  const { data } = useFetchCustomers();
 
   const createOrder = useCreateOrder();
   const updateOrder = useUpdateOrder();
   const deleteOrder = useDeleteOrder();
 
-  const customerMap = customers?.reduce(
-    (
-      acc: { [x: string]: any },
-      customer: { id: string | number; name: any }
-    ) => {
-      acc[customer.id] = customer.name;
-      return acc;
-    },
-    {}
-  );
+  const customerMap = data?.reduce((acc: any, customer: TCustomer) => {
+    acc[customer.id] = customer.name;
+    return acc;
+  }, {});
 
   const saleOrdersWithCustomerNames = orders?.map((order) => ({
     ...order,

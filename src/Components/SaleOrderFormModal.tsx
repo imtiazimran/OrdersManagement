@@ -16,7 +16,7 @@ import {
 import { MultiSelect } from "chakra-multiselect";
 import { useForm, Controller } from "react-hook-form";
 import "../index.css";
-import { useCreateSKU } from "../hooks/saleOrdersHooks";
+import { useCreateOrder } from "../hooks/saleOrdersHooks";
 
 type SaleOrderFormModalProps = {
   isOpen: boolean;
@@ -33,7 +33,7 @@ const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
     formState: { errors },
   } = useForm();
 
-  const mutation = useCreateSKU();
+  const { mutate: mutation, isPending } = useCreateOrder();
 
   const items = [
     "Neptunium",
@@ -54,7 +54,7 @@ const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
   }));
 
   const onSubmit = (data: any) => {
-    mutation.mutate(data);
+    mutation(data);
     onClose();
   };
 
@@ -133,7 +133,7 @@ const SaleOrderFormModal: React.FC<SaleOrderFormModalProps> = ({
                 colorScheme="blue"
                 mr={3}
                 type="submit"
-                isLoading={mutation?.isLoading}
+                isLoading={isPending}
               >
                 Save
               </Button>

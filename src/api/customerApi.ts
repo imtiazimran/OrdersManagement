@@ -1,6 +1,18 @@
 // api/customerApi.ts
 
-export const fetchCustomers = async () => {
+export type TCustomer = {
+    id: string | number;
+    name: string;
+    color: number[];
+    email: string;
+    pincode: string;
+    location_name: string;
+    type: string;
+    profile_pic: string | null;
+    gst: string;
+};
+
+export const fetchCustomers = async (): Promise<TCustomer[]> => {
     // Example array of customers based on the provided schema
     const customers = [
         {
