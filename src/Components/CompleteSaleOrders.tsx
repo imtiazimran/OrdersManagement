@@ -34,8 +34,6 @@ const CompletedSaleOrders: React.FC = () => {
     price: order.items.reduce((total, item) => total + item.price, 0),
   }));
 
-  console.log(saleOrdersWithCustomerNames);
-
   if (isLoading) {
     return (
       <Box textAlign="center" mt="20">
