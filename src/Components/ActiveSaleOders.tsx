@@ -113,7 +113,6 @@ const ActiveSaleOrders: React.FC = () => {
       }
     );
   };
-  console.log(selectedSKU?.name);
   const handleDeleteSKU = (id: number) => {
     deleteOrder.mutate(id, {
       onSuccess: () => {
